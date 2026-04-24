@@ -63,6 +63,33 @@ app.delete('/api/persons/:id', (req, res) => {
     }
 })
 
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+
+    if(!body.name || !body.number) {
+        return res.status(400).json({
+            error: "missing person's name or number"
+        })
+    }
+
+    const personAlreadyInPhonebook = persons.some(person => person.name === body.name && person.number === body.number)
+    if (personAlreadyInPhonebook) {
+        res.status(400).json({
+            error: "This person is already in the phonebook with this number"
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: Math.random() * 1000000
+    }
+
+    persons = persons.concat(person)
+
+    res.json(person)
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

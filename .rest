@@ -1,3 +1,12 @@
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name":  "Alan Turing",
+  "number": "98-76-543210"
+}
+
+###
 GET http://localhost:3001/api/persons/1
 Accept: application/json
 
