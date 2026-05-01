@@ -63,22 +63,14 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const personAlreadyInPhonebook = persons.some(person => person.name === body.name && person.number === body.number)
-    if (personAlreadyInPhonebook) {
-        res.status(400).json({
-            error: "This person is already in the phonebook with this number"
-        })
-    }
-
-    const person = {
+    const newPerson = new Person({
         name: body.name,
-        number: body.number,
-        id: Math.random() * 1000000
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person)
-
-    res.json(person)
+    newPerson.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
 })
 
 const PORT = process.env.PORT
