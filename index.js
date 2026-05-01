@@ -23,23 +23,22 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    const id = req.params.id
+    Person.findById(id)
+        .then(result => res.json(result))
+        .catch(error => next(error))
 })
 
 app.get('/info', (req, res) => {
-    const page = "<p>Phonebook has info for " +
-        persons.length +
-        " people</p><p>" +
-        new Date() +
-        "</p>"
-    res.send(page)
+    Person.find({})
+        .then(result => {
+            const page = "<p>Phonebook has info for " +
+                result.length +
+                " people</p><p>" +
+                new Date() +
+                "</p>"
+            res.send(page)
+        })
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
