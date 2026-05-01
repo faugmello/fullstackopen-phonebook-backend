@@ -17,11 +17,26 @@ const personSchema = new mongoose.Schema({
     name: {
         type: String,
         minLength: 3,
-        required: true
+        required: [true, 'Person name is required']
     },
     number: {
         type: String,
-        required: true
+        validate: {
+            validator: function(v) {
+                if (v.length < 8) return false;
+                if (v.includes('-')) {
+                  const parts = v.split('-');
+                  if (parts.length !== 2) return false;
+                  const [prefix, suffix] = parts;
+                  const prefixIsValid = /^\d{2,3}$/.test(prefix);
+                  const suffixIsValid = /^\d+$/.test(suffix);
+                  return prefixIsValid && suffixIsValid;
+                }
+                return /^\d+$/.test(v);
+            },
+            message: props => `${props.value} is not a valid number format`
+        },
+        required: [true, 'Person phone number is required']
     }
 })
 
